@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -41,7 +42,7 @@ public class App extends Application {
         
         Image fondo = new Image(getClass().getResourceAsStream("/Images/background.png"));
         Image hormiga1 = new Image(getClass().getResourceAsStream("/Images/walk.png"));
-        //Image hormiga2 = new Image(getClass().getResourceAsStream("/Images/walk.png"));
+        Image hormiga2 = new Image(getClass().getResourceAsStream("/Images/walkroja.png"));
         
         ImageView  imageView1 = new ImageView (fondo);
         ImageView  imageView2 = new ImageView (fondo);
@@ -50,6 +51,7 @@ public class App extends Application {
         ImageView  imageView5 = new ImageView (fondo);
         ImageView  imageView6 = new ImageView (fondo);
         ImageView  Hormiga1 = new ImageView (hormiga1);
+        ImageView  Hormiga2 = new ImageView (hormiga2);
         root.getChildren().add(imageView1);
         root.getChildren().add(imageView2);
         root.getChildren().add(imageView3);
@@ -57,6 +59,7 @@ public class App extends Application {
         root.getChildren().add(imageView5);
         root.getChildren().add(imageView6);
         root.getChildren().add(Hormiga1);
+        root.getChildren().add(Hormiga2);
         
         imageView1.setX(ladoImagen);
         imageView2.setX(2* ladoImagen);
@@ -68,6 +71,8 @@ public class App extends Application {
         Hormiga1.setX(2*ladoImagen);
         Hormiga1.setFitWidth(50);
         Hormiga1.setFitHeight(58);
+        Hormiga2.setFitWidth(60);
+        Hormiga2.setFitHeight(70);
         
         Timeline timeline;
         timeline = new Timeline(
@@ -88,17 +93,48 @@ public class App extends Application {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+        
+// Pulsaciones del ratón       
+    scene.setOnMouseClicked(
+            new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e)
+                {
+                    if ( Hormiga1.contains( e.getX(), e.getY() ) ){
+                        Hormiga1.setX(-50);
+                        Hormiga1.setY(30);
+                        System.out.println("Le doy");
+                        // meter sonido
+
+                    }
+                    if ( Hormiga2.contains( e.getX(), e.getY() ) ){
+                        System.out.println("Le doy");
+                        Hormiga2.setX(-50);
+                        Hormiga2.setY(30);
+                        // meter sonido
+
+                    }
+                }
+            });
     }
 
     public static void main(String[] args) {
         launch();
-    }
-
+    }   
 }
 
+// Lógica del juego:
+//Habrá un número determinado de hormigas que siempre será el mismo
+//Se usará las posiciones negativas para jugar gracias a que no se verá
+//Cuando una hormiga sea aplastada, viajará a una parte aleatoria de la superficie
+//que no se ve, sumando un punto y volviendo a la zona de juego
+
 //Cosas por hacer: 
+// - Detectar pulsaciones de raton
 // - Hacer que la hormiga se diriga hacia la zona de juego cuando se mate
-// - Delimitar la zona
 // - Contador de puntos
 // - Variedad de dificultad
 // - Cuando se pierde?
+// - Cuando una hormiga se muere, se genera un numero aleatorio 
+//-  Segun el numero hay que hacer un switch con 4 casos: en los que cada uno de los casos sea 
+//   un lado de la pantalla al que se teletransporta la hormiga.
