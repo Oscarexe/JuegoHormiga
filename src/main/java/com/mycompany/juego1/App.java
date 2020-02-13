@@ -26,18 +26,19 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     int ladoImagen= 256;
+    // arrays para guardar las variables
     short hormigaX[] = new short[5];
     byte hormigaSpeedX[]= new byte [5];
     byte hormigaDirectionX[] = new byte [5];
     short hormigaY[] = new short[5];
     byte hormigaSpeedY[]= new byte [5];
     byte hormigaDirectionY[] = new byte [5];
-    
-    Image imgHormiga0 = new Image(getClass().getResourceAsStream("/Images/walk.png"));
-    Image imgHormiga2 = new Image(getClass().getResourceAsStream("/Images/walkroja.png"));
-
     ImageView imgViewHormiga[] = new ImageView[3];
     
+    
+    //IMAGENES
+    Image imgHormiga0 = new Image(getClass().getResourceAsStream("/Images/walk.png"));
+    Image imgHormiga2 = new Image(getClass().getResourceAsStream("/Images/walkroja.png"));   
     
   
     @Override
@@ -46,18 +47,27 @@ public class App extends Application {
         //POSICION
         //hormiga 0
         hormigaX[0] = 0;
-        hormigaY[1] = 0;
+        hormigaY[0] = 0;
+        //hormiga 2
+        hormigaX[2] = 400;
+        hormigaY[2] = 100;
         
         // VELOCIDAD
         //hormiga 0
         hormigaSpeedX[0]= 3;
         hormigaSpeedY[0]= 3;
+        //hormiga 2
+        hormigaSpeedX[2]= 3;
+        hormigaSpeedY[2]= 3;
         
         
         // DIRECCION
         //hormiga 0
         hormigaDirectionX[0]= 1; 
         hormigaDirectionY[0]= 1; 
+        //hormiga 0
+        hormigaDirectionX[2]= 1; 
+        hormigaDirectionY[2]= 1;         
         
         // PANTALLA
         final int width= 640;
@@ -92,6 +102,8 @@ public class App extends Application {
         root.getChildren().add(imageView4);
         root.getChildren().add(imageView5);
         root.getChildren().add(imageView6);
+        root.getChildren().add(imageView7);
+        
         
         root.getChildren().add(imgViewHormiga[0]);
         root.getChildren().add(imgViewHormiga[2]);
@@ -108,16 +120,26 @@ public class App extends Application {
         imgViewHormiga[0].setFitHeight(58);
         imgViewHormiga[2].setFitWidth(60);
         imgViewHormiga[2].setFitHeight(70);
+        //sangre
+        imageView7.setX(500); 
+        imageView7.setY(700);
+        //imageView7.setWid
         
         Timeline timeline;
         timeline = new Timeline(
             // 0.017 ~= 60 FPS
            new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-               //ANIMACION DE LA HORMIGA
+               //ANIMACION DE LA HORMIGA 0
                imgViewHormiga[0].setY(hormigaY[0]);
                imgViewHormiga[0].setX(hormigaX[0]);
                hormigaX[0] +=hormigaSpeedX[0] * hormigaDirectionX[0];
                hormigaY[0] +=hormigaSpeedY[0] * hormigaDirectionY[0];
+               
+               //ANIMACION DE LA HORMIGA 2
+               imgViewHormiga[2].setY(hormigaY[2]);
+               imgViewHormiga[2].setX(hormigaX[2]);
+               hormigaX[2] +=hormigaSpeedX[2] * hormigaDirectionX[2];
+               hormigaY[2] +=hormigaSpeedY[2] * hormigaDirectionY[2];
         })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -131,26 +153,38 @@ public class App extends Application {
                     int numeroHormiga= 0;
                     //recolocarHormiga(numeroHormiga)
                     recolocarHormiga(numeroHormiga);
+                    //sangre y sonido
+                    
                 }        
 
                 // me quedo aqui    
-                else { if ( imgViewHormiga[2].contains( i.getX(), i.getY() ) ){
+                else { if ( imgViewHormiga[2].contains( e.getX(), e.getY() ) ){
                     // asignar un numero a numeroHormiga
-                    System.out.println("le doy");
+                    System.out.println("le doy a la 2");
                     int numeroHormiga= 2;
                     //recolocarHormiga(numeroHormiga)
                     recolocarHormiga(numeroHormiga);
-                }
-        });
-            
-            
-            
+                    //sangre y sonido
+                }}
+        });     
+        //Metodo controlarSalida
+    /*private void controlarSalida(){
+        if(hormigaX[0]< -300 || hormigaX[0] > 940 || hormigaY[0]< -300 || hormigaY[0] > 740 ){
+            System.out.println("sale");
+            recolocarHormiga(0);
+        }*/
+        
+    
+
+    if(hormigaX[2]< -300 || hormigaX[2]> 940 || hormigaY[2]< -300 || hormigaY[2]> 740 ){
+        recolocarHormiga(2);
     }
+}
     
 
 
 
-//METODO RECOLOCAR HORMIGA
+    //METODO RECOLOCAR HORMIGA
     private void recolocarHormiga(int numeroHormiga){
     //            int numeroHormiga;
         Random random = new Random();
@@ -161,38 +195,47 @@ public class App extends Application {
                 // izquierda
                 // mandar la hormiga a un punto aleatorio entre 0 y 640 de la Y
                 // mandar la hormiga a un punto negativo de la X
-                // meter sonido y sangre
+                // izquierda
                 int caso0PositionYImg2 = random.nextInt(640);
-                int caso0PositionXImg2 = -100 ;
-                imgViewHormiga[numeroHormiga].setX(caso0PositionXImg2);
-                imgViewHormiga[numeroHormiga].setY(caso0PositionYImg2);
+                int caso0PositionXImg2 = -200 ;
+                hormigaY[numeroHormiga]= (short) caso0PositionYImg2;
+                hormigaX[numeroHormiga]= (short) caso0PositionXImg2;
+                hormigaDirectionX[numeroHormiga] = 1;
+
+
 
                 break;
             case 1:
                 // mandar la hormiga a un punto aleatorio entre 0 y 640 de la Y
                 // la X vale mas de 480 para que salga
+                //derecha
                 int caso1PositionYImg2 = random.nextInt(640);
-                int caso1PositionXImg2 = 600 ;
-                imgViewHormiga[numeroHormiga].setX(caso1PositionXImg2);
-                imgViewHormiga[numeroHormiga].setY(caso1PositionYImg2);
+                int caso1PositionXImg2 = 840 ;
+                hormigaY[numeroHormiga]= (short) caso1PositionYImg2;
+                hormigaX[numeroHormiga]= (short) caso1PositionXImg2;
+                hormigaDirectionX[numeroHormiga] = -1;
                 break;
 
             case 2:
                 // mandarla a un punto aleatorio de la X entre 0 y 480 
                 // Y negativa 
+                // abajo
                 int caso2PositionXImg2 = random.nextInt(480);
-                int caso2PositionYImg2 = -100 ;
-                imgViewHormiga[numeroHormiga].setX(caso2PositionXImg2);
-                imgViewHormiga[numeroHormiga].setY(caso2PositionYImg2);
+                int caso2PositionYImg2 = 640 ;
+                hormigaY[numeroHormiga]= (short) caso2PositionYImg2;
+                hormigaX[numeroHormiga]= (short) caso2PositionXImg2;
+                hormigaDirectionY[numeroHormiga] = -1;
                 break;
 
             case 3:
                 // mandarla a una posicion aleatoria de X entre 0 y 480
                 // mandarla a una posicion negativa de Y
+                //arriba
                 int caso3PositionXImg2 = random.nextInt(480);
-                int caso3PositionYImg2 = -100 ;
-                imgViewHormiga[numeroHormiga].setX(caso3PositionXImg2);
-                imgViewHormiga[numeroHormiga].setY(caso3PositionYImg2);
+                int caso3PositionYImg2 = -200 ;
+                hormigaY[numeroHormiga]= (short) caso3PositionYImg2;
+                hormigaX[numeroHormiga]= (short) caso3PositionXImg2;
+                hormigaDirectionY[numeroHormiga] = 1;
                 break;
             default:
                 // code block
@@ -223,5 +266,6 @@ public class App extends Application {
 //-  Segun el numero hay que hacer un switch con 4 casos: en los que cada uno de los casos sea 
 //   un lado de la pantalla al que se teletransporta la hormiga.
 //-  Moneda cada cierto tiempo con geometria
+//- bucle para la meta
 
    
