@@ -31,13 +31,22 @@ import javafx.stage.Stage;
 public class App extends Application {
     int ladoImagen= 256;
     // arrays para guardar las variables de las hormigas
-    short hormigaX[] = new short[5];
-    byte hormigaSpeedX[]= new byte [5];
-    byte hormigaDirectionX[] = new byte [5];
-    short hormigaY[] = new short[5];
-    byte hormigaSpeedY[]= new byte [5];
-    byte hormigaDirectionY[] = new byte [5];
-    ImageView imgViewHormiga[] = new ImageView[3];
+    short hormigaX[] = new short[6];
+    byte hormigaSpeedX[]= new byte [6];
+    byte hormigaDirectionX[] = new byte [6];
+    short hormigaY[] = new short[6];
+    byte hormigaSpeedY[]= new byte [6];
+    byte hormigaDirectionY[] = new byte [6];
+    // array hormigas
+    ImageView imgViewHormiga[] = new ImageView[6];
+    
+    // PANTALLA
+    final int width= 640;
+    final int height= 480;
+    
+    // variables galleta
+    int galletaX;
+    int galletaY;
     // variables moneda
     int monedaX;
     int monedaY;     
@@ -48,8 +57,12 @@ public class App extends Application {
     
     //IMAGENES
     Image imgHormiga0 = new Image(getClass().getResourceAsStream("/Images/walk.png"));
-    Image imgHormiga2 = new Image(getClass().getResourceAsStream("/Images/walkroja.png")); 
-    Image imgHormiga1 = new Image(getClass().getResourceAsStream("/Images/escarabajo.png"));   
+    Image imgHormiga2 = new Image(getClass().getResourceAsStream("/Images/walkroja.png"));
+    Image imgHormiga1 = new Image(getClass().getResourceAsStream("/Images/mosca.png"));        
+    Image mosca1 = new Image(getClass().getResourceAsStream("/Images/mosca1.png"));
+    Image mosca2 = new Image(getClass().getResourceAsStream("/Images/mosca2.png"));   
+    Image imgHormiga3 = new Image(getClass().getResourceAsStream("/Images/walk2.png"));
+    
     Image galleta = new Image(getClass().getResourceAsStream("/Images/cookie.png"));
     Image fondo = new Image(getClass().getResourceAsStream("/Images/background.png"));
     Image blood = new Image(getClass().getResourceAsStream("/Images/blood.png"));
@@ -65,7 +78,7 @@ public class App extends Application {
             hormigaX[0] = 0;
             hormigaY[0] = 0;
             
-            //hormiga 1
+            //hormiga 1 (mosca)
             hormigaX[1] = 0;
             hormigaY[1] = 0;
             
@@ -73,22 +86,49 @@ public class App extends Application {
             hormigaX[2] = 400;
             hormigaY[2] = 100;
             
+            //hormiga 3 (escarabajo1)
+            hormigaX[3] = 0;
+            hormigaY[3] = 0;
+            
+            //hormiga 4 (spider)
+            hormigaX[4] = 0;
+            hormigaY[4] = 0;
+            
+            //hormiga 5 (spider1)
+            hormigaX[5] = 0;
+            hormigaY[5] = 0;
+            
             //moneda
             monedaX = 700;
             monedaY = 900;
+            //galleta
+            galletaX = height/2;
+            galletaY = width/2;
 
             // VELOCIDAD
             //hormiga 0
             hormigaSpeedX[0]= 2;
             hormigaSpeedY[0]= 3;
             
-            //hormiga 1
+            //hormiga 1 (escarabajo)
             hormigaSpeedX[1]= 2;
             hormigaSpeedY[1]= 3;
             
             //hormiga 2
             hormigaSpeedX[2]= 3;
             hormigaSpeedY[2]= 3;
+            
+            //hormiga 3 (escarabajo1)
+            hormigaSpeedX[3]= 2;
+            hormigaSpeedY[3]= 3;
+            
+            //hormiga 4 (spider)
+            hormigaSpeedX[4]= 2;
+            hormigaSpeedY[4]= 3;
+            
+            //hormiga 5 (spider1)
+            hormigaSpeedX[5]= 3;
+            hormigaSpeedY[5]= 3;
             
             //moneda
             monedaSpeedX = 2;
@@ -100,13 +140,25 @@ public class App extends Application {
             hormigaDirectionX[0]= 1; 
             hormigaDirectionY[0]= 1; 
             
-            //hormiga 1
+            //hormiga 1 (escarabajo)
             hormigaDirectionX[1]= 1; 
             hormigaDirectionY[1]= 1;
             
-            //hormiga 0
+            //hormiga 2
             hormigaDirectionX[2]= 1; 
             hormigaDirectionY[2]= 1; 
+            
+            //hormiga 3 (escarabajo1)
+            hormigaDirectionX[3]= 1; 
+            hormigaDirectionY[3]= 1; 
+            
+            //hormiga 4 (spider)
+            hormigaDirectionX[4]= 1; 
+            hormigaDirectionY[4]= 1;
+            
+            //hormiga 5 (spider1)
+            hormigaDirectionX[5]= 1; 
+            hormigaDirectionY[5]= 1;
             
             //moneda
             monedaDirectionX = -1;
@@ -114,13 +166,11 @@ public class App extends Application {
             
             //moneda         
             moneda.setRadius (15);
-            moneda.setCenterX(400);
-            moneda.setCenterY(300);
+            moneda.setCenterX(monedaX);
+            moneda.setCenterY(monedaY);
             moneda.setFill(YELLOW);
 
-            // PANTALLA
-            final int width= 640;
-            final int height= 480;
+
 
             Pane root = new Pane();
             var scene = new Scene (root, width, height);
@@ -142,6 +192,9 @@ public class App extends Application {
             imgViewHormiga[0] = new ImageView (imgHormiga0);
             imgViewHormiga[1] = new ImageView (imgHormiga1);
             imgViewHormiga[2] = new ImageView (imgHormiga2);
+            imgViewHormiga[3] = new ImageView (mosca1);
+            imgViewHormiga[4] = new ImageView (mosca2);
+            imgViewHormiga[5] = new ImageView (imgHormiga3);
 
 
 
@@ -157,10 +210,13 @@ public class App extends Application {
             root.getChildren().add(moneda);
 
 
-            //Hormigas pantalla
+            //Insectos pantalla
             root.getChildren().add(imgViewHormiga[0]);
             root.getChildren().add(imgViewHormiga[1]);
             root.getChildren().add(imgViewHormiga[2]);
+            root.getChildren().add(imgViewHormiga[3]);
+            root.getChildren().add(imgViewHormiga[4]);
+            root.getChildren().add(imgViewHormiga[5]);
 
             imageView1.setX(ladoImagen);
             imageView2.setX(2* ladoImagen);
@@ -170,15 +226,36 @@ public class App extends Application {
             imageView6.setY(ladoImagen);
             imageView6.setX(2*ladoImagen);
             imgViewHormiga[0].setX(2*ladoImagen);
+
             
             // Cambiar relacion de aspecto
+            //hormiga
             imgViewHormiga[0].setFitWidth(50);
             imgViewHormiga[0].setFitHeight(58);
+            
+            //hormigaroja
             imgViewHormiga[2].setFitWidth(60);
             imgViewHormiga[2].setFitHeight(70);
+            
+            //mosca
             imgViewHormiga[1].setFitWidth(60);
             imgViewHormiga[1].setFitHeight(70);
-            imgViewHormiga[1].setVisible(false);
+            imgViewHormiga[1].setVisible(true);
+            
+            //mosca1
+            imgViewHormiga[3].setFitWidth(60);
+            imgViewHormiga[3].setFitHeight(70);
+            imgViewHormiga[3].setVisible(true);
+            
+            //mosca2
+            imgViewHormiga[4].setFitWidth(60);
+            imgViewHormiga[4].setFitHeight(70);
+            imgViewHormiga[4].setVisible(true);
+            
+            //hormiga2
+            imgViewHormiga[5].setFitWidth(60);
+            imgViewHormiga[5].setFitHeight(70);
+            imgViewHormiga[5].setVisible(true);
             
             //sangre
             imageView7.setX(500); 
@@ -187,8 +264,10 @@ public class App extends Application {
             imageView7.setFitHeight(45);
             
             //galleta
-            imageView8.setFitWidth(120);
-            imageView8.setFitHeight(90);
+            imageView8.setX(galletaX);
+            imageView8.setY(galletaY);
+            imageView8.setFitWidth(180);
+            imageView8.setFitHeight(140);
             
             
 
@@ -202,13 +281,41 @@ public class App extends Application {
                    hormigaX[0] +=hormigaSpeedX[0] * hormigaDirectionX[0];
                    hormigaY[0] +=hormigaSpeedY[0] * hormigaDirectionY[0];
                    controlarSalida(0);
+                   
+                   //ANIMACION DE LA MOSCA
+                   imgViewHormiga[1].setY(hormigaY[1]);
+                   imgViewHormiga[1].setX(hormigaX[1]);
+                   hormigaX[1] +=hormigaSpeedX[1] * hormigaDirectionX[1];
+                   hormigaY[1] +=hormigaSpeedY[1] * hormigaDirectionY[1];
+                   controlarSalida(1);
+                   
+                    //ANIMACION DE LA MOSCA1
+                   imgViewHormiga[3].setY(hormigaY[3]);
+                   imgViewHormiga[3].setX(hormigaX[3]);
+                   hormigaX[3] +=hormigaSpeedX[3] * hormigaDirectionX[3];
+                   hormigaY[3] +=hormigaSpeedY[3] * hormigaDirectionY[3];
+                   controlarSalida(3);
+                   
+                   //ANIMACION DE LA MOSCA2
+                   imgViewHormiga[4].setY(hormigaY[4]);
+                   imgViewHormiga[4].setX(hormigaX[4]);
+                   hormigaX[4] +=hormigaSpeedX[4] * hormigaDirectionX[4];
+                   hormigaY[4] +=hormigaSpeedY[4] * hormigaDirectionY[4];
+                   controlarSalida(4);
 
-                   //ANIMACION DE LA HORMIGA 2
+                   //ANIMACION DE LA HORMIGA ROJA
                    imgViewHormiga[2].setY(hormigaY[2]);
                    imgViewHormiga[2].setX(hormigaX[2]);
                    hormigaX[2] +=hormigaSpeedX[2] * hormigaDirectionX[2];
                    hormigaY[2] +=hormigaSpeedY[2] * hormigaDirectionY[2];
                    controlarSalida(2);
+                   
+                   //ANIMACION DE LA HORMIGA BLANCA
+                   imgViewHormiga[5].setY(hormigaY[5]);
+                   imgViewHormiga[5].setX(hormigaX[5]);
+                   hormigaX[5] +=hormigaSpeedX[5] * hormigaDirectionX[5];
+                   hormigaY[5] +=hormigaSpeedY[5] * hormigaDirectionY[5];
+                   controlarSalida(5);
                    
                    //ANIMACION DE LA MONEDA
                    moneda.setCenterY(monedaY);
@@ -249,6 +356,49 @@ public class App extends Application {
                         imageView7.setY (e.getY( ));
                     }
                     
+                    if ( imgViewHormiga[1].contains( e.getX(), e.getY() ) ){
+                        // asignar un numero a numeroHormiga
+                        System.out.println("le doy a la 1");
+                        int numeroHormiga= 1;
+                        //recolocarHormiga(numeroHormiga)
+                        recolocarHormiga(numeroHormiga);
+                        //sangre y sonido
+                        imageView7.setX (e.getX( ));
+                        imageView7.setY (e.getY( ));
+                    }
+                    
+                    if ( imgViewHormiga[3].contains( e.getX(), e.getY() ) ){
+                        // asignar un numero a numeroHormiga
+                        System.out.println("le doy a la 3");
+                        int numeroHormiga= 3;
+                        //recolocarHormiga(numeroHormiga)
+                        recolocarHormiga(numeroHormiga);
+                        //sangre y sonido
+                        imageView7.setX (e.getX( ));
+                        imageView7.setY (e.getY( ));
+                    }
+                    
+                    if ( imgViewHormiga[4].contains( e.getX(), e.getY() ) ){
+                        // asignar un numero a numeroHormiga
+                        System.out.println("le doy a la 4");
+                        int numeroHormiga= 4;
+                        //recolocarHormiga(numeroHormiga)
+                        recolocarHormiga(numeroHormiga);
+                        //sangre y sonido
+                        imageView7.setX (e.getX( ));
+                        imageView7.setY (e.getY( ));
+                    }
+                    
+                    if ( imgViewHormiga[5].contains( e.getX(), e.getY() ) ){
+                        // asignar un numero a numeroHormiga
+                        System.out.println("le doy a la 5");
+                        int numeroHormiga= 5;
+                        //recolocarHormiga(numeroHormiga)
+                        recolocarHormiga(numeroHormiga);
+                        //sangre y sonido
+                        imageView7.setX (e.getX( ));
+                        imageView7.setY (e.getY( ));
+                    }
                     // moneda  
                     if ( moneda.contains( e.getX(), e.getY() ) ){
                         System.out.println("le doy a la moneda");
@@ -327,7 +477,7 @@ public class App extends Application {
                 int caso3PositionYImg2 = -200 ;
                 hormigaY[numeroHormiga]= (short) caso3PositionYImg2;
                 hormigaX[numeroHormiga]= (short) caso3PositionXImg2;
-                hormigaDirectionY[numeroHormiga] = 1;
+                hormigaDirectionY[numeroHormiga] = 1;  
                 break;
             default:
                 // code block
